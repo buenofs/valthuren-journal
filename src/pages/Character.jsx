@@ -13,6 +13,7 @@ export default function Character() {
   const [viewItem, setViewItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [newGift, setNewGift] = useState(null);
+  const [newItem, setNewItem] = useState(null);
 
   useEffect(() => {
     const session = JSON.parse(localStorage.getItem('session'));
@@ -54,7 +55,8 @@ export default function Character() {
 
     fetchData();
 
-    const subscription = supabase
+    // Subscription to gifts channel for real-time updates
+    const giftSubscription = supabase
       .channel('character_gifts')
       .on(
         'postgres_changes',
@@ -73,7 +75,6 @@ export default function Character() {
             .single()
             .then(({ data }) => {
               if (data) {
-                // Marca a nova dádiva e a adiciona à lista
                 setNewGift(data);
                 setGifts((prev) => [
                   ...prev,
@@ -85,8 +86,40 @@ export default function Character() {
       )
       .subscribe();
 
+    // Subscription to items channel for real-time updates
+    const itemSubscription = supabase
+      .channel('character_items')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'character_items',
+          filter: `character_id=eq.${id}`,
+        },
+        (payload) => {
+          const newItemId = payload.new.item_id;
+          supabase
+            .from('items')
+            .select('*')
+            .eq('id', newItemId)
+            .single()
+            .then(({ data }) => {
+              if (data) {
+                setNewItem(data);
+                setItems((prev) => [
+                  ...prev,
+                  { id: payload.new.id, items: data },
+                ]);
+              }
+            });
+        },
+      )
+      .subscribe();
+
     return () => {
-      supabase.removeChannel(subscription);
+      supabase.removeChannel(giftSubscription);
+      supabase.removeChannel(itemSubscription);
     };
   }, [authorized, id]);
 
@@ -111,14 +144,14 @@ export default function Character() {
 
   return (
     <div
-      className="min-h-screen px-4 py-6 bg-[#1a1816] text-white font-['MedievalSharp'] relative overflow-hidden"
+      className="min-h-screen px-4 py-6 bg-[#1a1816] text-white font-['MedievalSharp'] relative"
       style={{
         backgroundImage: "url('/ui/bg.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <div className="absolute inset-0 bg-[#1a1816]/80 pointer-events-none backdrop-blur-xs"></div>
+      <div className="absolute inset-0 bg-[#1a1816]/80 pointer-events-none backdrop-blur-none"></div>
 
       <div className="relative max-w-3xl mx-auto text-center">
         <div className="flex flex-col items-center">
@@ -132,22 +165,21 @@ export default function Character() {
           </h1>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#262121]/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-yellow-700">
-            <h2 className="text-yellow-400 text-xl mb-4 font-semibold border-b border-yellow-700 pb-2">
+        <div className="mt-6">
+          <div className="bg-[#262121]/80 backdrop-blur-md rounded-lg p-4 border border-yellow-700 w-full mb-4">
+            <h2 className="text-yellow-400 text-xl mb-2 font-semibold border-b border-yellow-700 pb-2">
               Dádivas
             </h2>
             {sortedGifts.length > 0 ? (
-              <ul className="space-y-2">
+              <ul className="space-y-1">
                 {sortedGifts.map((g) => (
-                  <li key={g.id} className="relative">
+                  <li key={g.id} className="relative w-full">
                     <button
                       onClick={() => setViewGift(g.gifts)}
-                      className="text-left w-full text-yellow-200 hover:text-yellow-100 hover:underline"
+                      className="w-full text-left text-lg text-yellow-200 hover:text-yellow-100 hover:underline py-1 px-2 rounded-md"
                     >
                       {g.gifts.name}
                     </button>
-                    {/* Mostra o "New!" piscando se for a nova dádiva */}
                     {newGift && newGift.id === g.gifts.id && (
                       <span className="absolute top-0 right-0 text-sm text-yellow-400 animate-pulse">
                         NOVO!
@@ -163,20 +195,26 @@ export default function Character() {
             )}
           </div>
 
-          <div className="bg-[#262121]/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-yellow-700">
-            <h2 className="text-yellow-400 text-xl mb-4 font-semibold border-b border-yellow-700 pb-2">
+          {/* Itens Únicos - Full Width, No Cards */}
+          <div className="bg-[#262121]/80 backdrop-blur-md rounded-lg p-4 border border-yellow-700 w-full">
+            <h2 className="text-yellow-400 text-xl mb-2 font-semibold border-b border-yellow-700 pb-2">
               Itens Únicos
             </h2>
             {sortedItems.length > 0 ? (
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {sortedItems.map((i) => (
-                  <li key={i.id}>
+                  <li key={i.id} className="relative w-full">
                     <button
                       onClick={() => setViewItem(i.items)}
-                      className="text-left w-full text-yellow-200 hover:text-yellow-100 hover:underline"
+                      className="w-full text-left text-lg text-yellow-200 hover:text-yellow-100 hover:underline py-3 px-4 rounded-md"
                     >
                       {i.items.name}
                     </button>
+                    {newItem && newItem.id === i.items.id && (
+                      <span className="absolute top-0 right-0 text-sm text-yellow-400 animate-pulse">
+                        NOVO!
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -187,13 +225,14 @@ export default function Character() {
         </div>
       </div>
 
+      {/* Popup da Dádiva */}
       {viewGift && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-[#1e1e1e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left">
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewGift.name}
             </h2>
-            <p className="mb-4 text-sm text-yellow-100">
+            <p className="text-yellow-100 mb-4 text-sm">
               {viewGift.description}
             </p>
             <p className="text-sm text-yellow-200">
@@ -214,6 +253,7 @@ export default function Character() {
         </div>
       )}
 
+      {/* Popup do Item */}
       {viewItem && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-[#1e1e1e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left">

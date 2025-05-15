@@ -57,10 +57,7 @@ export default function Login() {
       } else {
         localStorage.setItem(
           'session',
-          JSON.stringify({
-            role: 'player',
-            characterId: selectedCharacter.id,
-          }),
+          JSON.stringify({ role: 'player', characterId: selectedCharacter.id }),
         );
         navigate(`/character/${selectedCharacter.id}`);
       }
@@ -90,15 +87,27 @@ export default function Login() {
     if (pin.length < 6) setPin((prev) => prev + digit);
   };
 
-  const removeDigit = () => {
-    setPin((prev) => prev.slice(0, -1));
-  };
+  const removeDigit = () => setPin((prev) => prev.slice(0, -1));
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1a1816] to-[#13110f] text-white font-['MedievalSharp'] text-base p-6">
-      <div className="max-w-md mx-auto text-center">
-        <h1 className="text-4xl text-yellow-300 pb-4 mb-6">Quem é você?</h1>
+    <div
+      className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#1a1816] to-[#13110f] text-white font-['MedievalSharp'] text-base p-6"
+      style={{
+        backgroundImage: "url('/ui/bg.webp')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Overlay atrás do conteúdo */}
+      <div className="absolute inset-0 bg-[#1a1816]/80 backdrop-blur-none z-0 pointer-events-none" />
 
+      {/* Conteúdo acima da overlay */}
+      <div className="relative z-10 max-w-md w-full text-center space-y-6">
+        <h1 className="text-4xl text-yellow-300 font-['MedievalSharp']">
+          Quem é você?
+        </h1>
+
+        {/* Seletor de personagem */}
         {step === 'select' && (
           <div className="grid grid-cols-2 gap-6">
             {characters.map((char) => (
@@ -116,7 +125,7 @@ export default function Login() {
                 <div className="relative z-10">
                   {char.name === '???' ? (
                     <div className="relative w-24 h-24 mx-auto mb-2">
-                      <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-pulse blur-md opacity-40 z-20 shadow-yellow-400/50 shadow-lg"></div>
+                      <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-pulse blur-md opacity-40 z-20 shadow-yellow-400/50 shadow-lg" />
                       <img
                         src={char.image}
                         alt={char.name}
@@ -137,8 +146,9 @@ export default function Login() {
           </div>
         )}
 
+        {/* PIN Pad */}
         {showPad && (
-          <div className="mt-10 space-y-6 bg-[#2f2929] rounded-xl shadow-xl border border-yellow-800 p-6">
+          <div className="bg-[#2f2929] rounded-xl shadow-xl border border-yellow-800 p-6">
             <p className="text-yellow-200 text-2xl">
               {step === 'register' ? 'Crie seu PIN' : 'Digite seu PIN'}
             </p>
@@ -149,8 +159,7 @@ export default function Login() {
               </p>
             )}
 
-            {/* Caixa de PIN com animação moderna */}
-            <div className="flex justify-center space-x-2">
+            <div className="flex justify-center space-x-2 mt-4">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
@@ -159,12 +168,11 @@ export default function Login() {
                       ? 'bg-yellow-400 border-yellow-600 scale-105'
                       : 'border-yellow-500 bg-[#2f2929]'
                   } shadow-md`}
-                ></div>
+                />
               ))}
             </div>
 
-            {/* Teclado de entrada */}
-            <div className="grid grid-cols-3 gap-3 w-4/5 mx-auto">
+            <div className="grid grid-cols-3 gap-3 w-4/5 mx-auto mt-6">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, '←', 0, '✓'].map((val) => (
                 <button
                   key={val}
