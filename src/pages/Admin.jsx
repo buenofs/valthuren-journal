@@ -1,6 +1,7 @@
 // src/pages/Admin.jsx
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import RichTextEditor from '../components/RichTextEditor';
 
 export default function Admin() {
   const [gifts, setGifts] = useState([]);
@@ -160,8 +161,11 @@ export default function Admin() {
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-[#2e2e2e] border border-yellow-800 p-6 rounded-xl max-w-md text-left">
             <h2 className="text-yellow-300 text-2xl mb-2">{viewGift.name}</h2>
-            <p className="mb-2">{viewGift.description}</p>
-            <p className="text-sm text-yellow-200">
+            <div
+              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
+              dangerouslySetInnerHTML={{ __html: viewGift.description }}
+            />
+            <p className="text-sm text-yellow-200 mt-4">
               Usos por descanso curto: {viewGift.uses_per_long_rest}
             </p>
             <p className="text-sm text-yellow-200">
@@ -181,12 +185,15 @@ export default function Admin() {
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-[#2e2e2e] border border-yellow-800 p-6 rounded-xl max-w-md text-left">
             <h2 className="text-yellow-300 text-2xl mb-2">{viewItem.name}</h2>
-            <p className="mb-2">{viewItem.description}</p>
+            <div
+              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
+              dangerouslySetInnerHTML={{ __html: viewItem.description }}
+            />
             {viewItem.image_url && (
               <img
                 src={viewItem.image_url}
                 alt={viewItem.name}
-                className="mt-2 max-w-full rounded"
+                className="mt-4 max-w-[90%] max-h-[200px] mx-auto object-contain rounded border border-yellow-700 shadow"
               />
             )}
             <button
@@ -268,13 +275,9 @@ export default function Admin() {
             onChange={(e) => setNewGift({ ...newGift, name: e.target.value })}
             className="w-full mb-2 bg-[#1e1b1b] border border-yellow-700 p-2 rounded"
           />
-          <textarea
-            placeholder="Descrição"
-            value={newGift.description}
-            onChange={(e) =>
-              setNewGift({ ...newGift, description: e.target.value })
-            }
-            className="w-full mb-2 bg-[#1e1b1b] border border-yellow-700 p-2 rounded"
+          <RichTextEditor
+            content={newGift.description}
+            onChange={(value) => setNewGift({ ...newGift, description: value })}
           />
           <div className="flex gap-2 mb-2">
             <input
@@ -327,13 +330,9 @@ export default function Admin() {
             onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             className="w-full mb-2 bg-[#1e1b1b] border border-yellow-700 p-2 rounded"
           />
-          <textarea
-            placeholder="Descrição"
-            value={newItem.description}
-            onChange={(e) =>
-              setNewItem({ ...newItem, description: e.target.value })
-            }
-            className="w-full mb-2 bg-[#1e1b1b] border border-yellow-700 p-2 rounded"
+          <RichTextEditor
+            content={newItem.description}
+            onChange={(value) => setNewItem({ ...newItem, description: value })}
           />
           <input
             type="text"

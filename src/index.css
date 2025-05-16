@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+.tiptap ul {
+  list-style-type: disc;
+  margin-left: 1rem;
+  padding-left: 1rem;
+}
+
+.tiptap ol {
+  list-style-type: decimal;
+  margin-left: 1rem;
+  padding-left: 1rem;
+}
+
+.tiptap h2 {
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tiptap h3 {
+  font-size: 1.25rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}

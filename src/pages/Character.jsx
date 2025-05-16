@@ -228,19 +228,24 @@ export default function Character() {
       {/* Popup da Dádiva */}
       {viewGift && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[#1e1e1e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left">
+          <div className="bg-[#2e2e2e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left">
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewGift.name}
             </h2>
-            <p className="text-yellow-100 mb-4 text-sm">
-              {viewGift.description}
-            </p>
-            <p className="text-sm text-yellow-200">
-              Descanso curto: {viewGift.uses_per_short_rest}
-            </p>
-            <p className="text-sm text-yellow-200">
-              Descanso longo: {viewGift.uses_per_long_rest}
-            </p>
+            <div
+              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
+              dangerouslySetInnerHTML={{ __html: viewGift.description }}
+            />
+            {viewGift.uses_per_short_rest > 0 && (
+              <p className="text-sm text-yellow-200 mt-4">
+                Usos por descanso curto: {viewGift.uses_per_short_rest}
+              </p>
+            )}
+            {viewGift.uses_per_long_rest > 0 && (
+              <p className="text-sm text-yellow-200 mt-4">
+                Usos por descanso longo: {viewGift.uses_per_long_rest}
+              </p>
+            )}
             <div className="flex justify-end mt-6">
               <button
                 onClick={() => setViewGift(null)}
@@ -260,14 +265,15 @@ export default function Character() {
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewItem.name}
             </h2>
-            <p className="mb-4 text-sm text-yellow-100">
-              {viewItem.description}
-            </p>
+            <div
+              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
+              dangerouslySetInnerHTML={{ __html: viewItem.description }}
+            />
             {viewItem.image_url && (
               <img
                 src={viewItem.image_url}
                 alt={viewItem.name}
-                className="mt-2 w-full rounded border border-yellow-700"
+                className="mt-4 max-w-[90%] max-h-[200px] mx-auto object-contain rounded border border-yellow-700 shadow"
               />
             )}
             <div className="flex justify-end mt-6">
