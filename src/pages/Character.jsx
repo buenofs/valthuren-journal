@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import parse from 'html-react-parser';
 
 export default function Character() {
   const { id } = useParams();
@@ -232,10 +233,9 @@ export default function Character() {
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewGift.name}
             </h2>
-            <div
-              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
-              dangerouslySetInnerHTML={{ __html: viewGift.description }}
-            />
+            <div className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2">
+              {parse(viewGift.description)}
+            </div>
             {viewGift.uses_per_short_rest > 0 && (
               <p className="text-sm text-yellow-200 mt-4">
                 Usos por descanso curto: {viewGift.uses_per_short_rest}
@@ -265,10 +265,9 @@ export default function Character() {
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewItem.name}
             </h2>
-            <div
-              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
-              dangerouslySetInnerHTML={{ __html: viewItem.description }}
-            />
+            <div className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2">
+              {parse(viewItem.description)}
+            </div>
             {viewItem.image_url && (
               <img
                 src={viewItem.image_url}

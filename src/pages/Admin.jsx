@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import RichTextEditor from '../components/RichTextEditor';
+import parse from 'html-react-parser';
 
 export default function Admin() {
   const [gifts, setGifts] = useState([]);
@@ -161,10 +162,9 @@ export default function Admin() {
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-[#2e2e2e] border border-yellow-800 p-6 rounded-xl max-w-md text-left">
             <h2 className="text-yellow-300 text-2xl mb-2">{viewGift.name}</h2>
-            <div
-              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
-              dangerouslySetInnerHTML={{ __html: viewGift.description }}
-            />
+            <div className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2">
+              {parse(viewGift.description)}
+            </div>
             <p className="text-sm text-yellow-200 mt-4">
               Usos por descanso curto: {viewGift.uses_per_long_rest}
             </p>
@@ -185,10 +185,9 @@ export default function Admin() {
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-[#2e2e2e] border border-yellow-800 p-6 rounded-xl max-w-md text-left">
             <h2 className="text-yellow-300 text-2xl mb-2">{viewItem.name}</h2>
-            <div
-              className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2"
-              dangerouslySetInnerHTML={{ __html: viewItem.description }}
-            />
+            <div className="prose prose-invert max-w-none text-yellow-100 text-sm tiptap space-y-4 [&_p]:my-2">
+              {parse(viewItem.description)}
+            </div>
             {viewItem.image_url && (
               <img
                 src={viewItem.image_url}
