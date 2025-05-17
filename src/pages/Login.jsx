@@ -1,5 +1,5 @@
 // src/pages/Login.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -36,13 +36,37 @@ const characters = [
   },
 ];
 
+const totalImages = characters.length;
+
 export default function Login() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [pin, setPin] = useState('');
   const [step, setStep] = useState('select');
   const [showPad, setShowPad] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let loadedImages = 0;
+
+    characters.forEach((char) => {
+      const img = new Image();
+      img.src = char.image;
+      img.onload = () => {
+        loadedImages++;
+        if (loadedImages === totalImages) {
+          setLoading(false);
+        }
+      };
+      img.onerror = () => {
+        loadedImages++;
+        if (loadedImages === totalImages) {
+          setLoading(false);
+        }
+      };
+    });
+  }, []);
 
   const handleSelectCharacter = async (charName) => {
     setError('');
@@ -112,6 +136,16 @@ export default function Login() {
   };
 
   const removeDigit = () => setPin((prev) => prev.slice(0, -1));
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#1a1816] text-white font-['MedievalSharp']">
+        <div className="text-center">
+          <h2 className="text-yellow-300 text-xl">Carregando...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
