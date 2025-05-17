@@ -4,12 +4,36 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const characters = [
-  { name: 'Thebryan', image: '/avatars/thebryan.png' },
-  { name: 'Thytus', image: '/avatars/thytus.png' },
-  { name: 'Toji', image: '/avatars/toji.png' },
-  { name: 'Talik', image: '/avatars/talik.png' },
-  { name: 'Danstão', image: '/avatars/danstao.png' },
-  { name: '???', image: '/avatars/unknown.png' },
+  {
+    name: 'Thebryan',
+    image:
+      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/thebryan.png?width=300&quality=70',
+  },
+  {
+    name: 'Thytus',
+    image:
+      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/thytus.png?width=300&quality=70',
+  },
+  {
+    name: 'Toji',
+    image:
+      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/toji.png?width=300&quality=70',
+  },
+  {
+    name: 'Talik',
+    image:
+      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/talik.png?width=300&quality=70',
+  },
+  {
+    name: 'Danstão',
+    image:
+      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/danstao.png?width=300&quality=70',
+  },
+  {
+    name: '???',
+    image:
+      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/unknown.png?width=300&quality=70',
+  },
 ];
 
 export default function Login() {
@@ -93,7 +117,8 @@ export default function Login() {
     <div
       className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#1a1816] to-[#13110f] text-white font-['MedievalSharp'] text-base p-6"
       style={{
-        backgroundImage: "url('/ui/bg.webp')",
+        backgroundImage:
+          "url('https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/sign/ui/bg.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2M1YTkzNWVjLTc2NDAtNDdmMy04OTQyLWU0ZDQ3MDY4NjQ0ZiJ9.eyJ1cmwiOiJ1aS9iZy53ZWJwIiwiaWF0IjoxNzQ3NDg2MzcwLCJleHAiOjE3NzkwMjIzNzB9.YSU6SW5zs9ce39erVQJvyGco3gE42e67fyIdur0_qyw')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

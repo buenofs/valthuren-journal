@@ -147,7 +147,8 @@ export default function Character() {
     <div
       className="min-h-screen px-4 py-6 bg-[#1a1816] text-white font-['MedievalSharp'] relative"
       style={{
-        backgroundImage: "url('/ui/bg.webp')",
+        backgroundImage:
+          "url('https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/sign/ui/bg.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2M1YTkzNWVjLTc2NDAtNDdmMy04OTQyLWU0ZDQ3MDY4NjQ0ZiJ9.eyJ1cmwiOiJ1aS9iZy53ZWJwIiwiaWF0IjoxNzQ3NDg2MzcwLCJleHAiOjE3NzkwMjIzNzB9.YSU6SW5zs9ce39erVQJvyGco3gE42e67fyIdur0_qyw')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
