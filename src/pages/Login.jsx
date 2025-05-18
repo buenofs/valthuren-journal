@@ -10,7 +10,7 @@ const characters = [
       'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/thebryan.png?width=300&quality=70',
   },
   {
-    name: 'Thytus',
+    name: 'Tythos',
     image:
       'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/thytus.png?width=300&quality=70',
   },
