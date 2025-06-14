@@ -230,7 +230,7 @@ export default function Character() {
       {/* Popup da Dádiva */}
       {viewGift && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[#2e2e2e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left">
+          <div className="bg-[#2e2e2e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left max-h-screen overflow-y-auto">
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewGift.name}
             </h2>
@@ -262,7 +262,7 @@ export default function Character() {
       {/* Popup do Item */}
       {viewItem && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[#1e1e1e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left">
+          <div className="bg-[#1e1e1e]/80 backdrop-blur-md border border-yellow-800 p-6 rounded-xl w-11/12 max-w-md text-left max-h-screen overflow-y-auto">
             <h2 className="text-yellow-300 text-2xl mb-2 font-bold">
               {viewItem.name}
             </h2>
