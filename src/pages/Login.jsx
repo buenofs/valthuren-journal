@@ -152,7 +152,7 @@ export default function Login() {
       className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#1a1816] to-[#13110f] text-white font-['MedievalSharp'] text-base p-6"
       style={{
         backgroundImage:
-          "url('https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/sign/ui/bg.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2M1YTkzNWVjLTc2NDAtNDdmMy04OTQyLWU0ZDQ3MDY4NjQ0ZiJ9.eyJ1cmwiOiJ1aS9iZy53ZWJwIiwiaWF0IjoxNzQ3NDg2MzcwLCJleHAiOjE3NzkwMjIzNzB9.YSU6SW5zs9ce39erVQJvyGco3gE42e67fyIdur0_qyw')",
+          "url('https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/ui/bg.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
