@@ -89,8 +89,8 @@ export default function Admin() {
         .insert({
           name: newGift.name,
           description: newGift.description,
-          uses_per_long_rest: newGift.useShort,
-          uses_per_short_rest: newGift.useLong,
+          uses_per_short_rest: newGift.useShort,
+          uses_per_long_rest: newGift.useLong,
         })
         .select()
         .single();
@@ -166,10 +166,10 @@ export default function Admin() {
               {parse(viewGift.description)}
             </div>
             <p className="text-sm text-yellow-200 mt-4">
-              Usos por descanso curto: {viewGift.uses_per_long_rest}
+              Usos por descanso curto: {viewGift.uses_per_short_rest}
             </p>
             <p className="text-sm text-yellow-200">
-              Usos por descanso longo: {viewGift.uses_per_short_rest}
+              Usos por descanso longo: {viewGift.uses_per_long_rest}
             </p>
             <button
               onClick={() => setViewGift(null)}

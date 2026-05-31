@@ -178,9 +178,21 @@ export default function Character() {
                   <li key={g.id} className="relative w-full">
                     <button
                       onClick={() => setViewGift(g.gifts)}
-                      className="w-full text-left text-lg text-yellow-200 hover:text-yellow-100 hover:underline py-1 px-2 rounded-md"
+                      className="w-full text-left py-1 px-2 rounded-md hover:bg-yellow-900/20"
                     >
-                      {g.gifts.name}
+                      <span className="text-lg text-yellow-200 hover:text-yellow-100">{g.gifts.name}</span>
+                      <div className="flex gap-3 mt-0.5">
+                        {g.gifts.uses_per_short_rest > 0 && (
+                          <span className="text-xs text-yellow-400/80">
+                            {g.gifts.uses_per_short_rest}× descanso curto
+                          </span>
+                        )}
+                        {g.gifts.uses_per_long_rest > 0 && (
+                          <span className="text-xs text-yellow-400/80">
+                            {g.gifts.uses_per_long_rest}× descanso longo
+                          </span>
+                        )}
+                      </div>
                     </button>
                     {newGift && newGift.id === g.gifts.id && (
                       <span className="absolute top-0 right-0 text-sm text-yellow-400 animate-pulse">
