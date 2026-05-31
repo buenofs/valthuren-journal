@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import parse from "html-react-parser";
 
 export default function Character() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [authorized, setAuthorized] = useState(false);
   const [character, setCharacter] = useState(null);
   const [gifts, setGifts] = useState([]);
   const [items, setItems] = useState([]);
@@ -17,17 +15,6 @@ export default function Character() {
   const [newItem, setNewItem] = useState(null);
 
   useEffect(() => {
-    const session = JSON.parse(localStorage.getItem("session"));
-    if (!session || session.role !== "player" || session.characterId !== id) {
-      navigate("/");
-    } else {
-      setAuthorized(true);
-    }
-  }, [id, navigate]);
-
-  useEffect(() => {
-    if (!authorized) return;
-
     const fetchData = async () => {
       const { data: charData } = await supabase
         .from("characters")
@@ -56,7 +43,7 @@ export default function Character() {
 
     fetchData();
 
-    // Subscription to gifts channel for real-time updates
+    // Subscriptions for real-time updates
     const giftSubscription = supabase
       .channel("character_gifts")
       .on(
@@ -122,9 +109,9 @@ export default function Character() {
       supabase.removeChannel(giftSubscription);
       supabase.removeChannel(itemSubscription);
     };
-  }, [authorized, id]);
+  }, [id]);
 
-  if (!authorized || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#1a1816] text-white font-['MedievalSharp']">
         <div className="text-center">

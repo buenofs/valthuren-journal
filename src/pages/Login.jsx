@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
@@ -39,48 +38,46 @@ const characters = [
 const totalImages = characters.length;
 
 export default function Login() {
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [pin, setPin] = useState("");
-  const [step, setStep] = useState("select");
   const [showPad, setShowPad] = useState(false);
+  const [adminCharacter, setAdminCharacter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     let loadedImages = 0;
-
     characters.forEach((char) => {
       const img = new Image();
       img.src = char.image;
       img.onload = () => {
         loadedImages++;
-        if (loadedImages === totalImages) {
-          setLoading(false);
-        }
+        if (loadedImages === totalImages) setLoading(false);
       };
       img.onerror = () => {
         loadedImages++;
-        if (loadedImages === totalImages) {
-          setLoading(false);
-        }
+        if (loadedImages === totalImages) setLoading(false);
       };
     });
   }, []);
 
   const handleSelectCharacter = async (charName) => {
     setError("");
+
     const { data } = await supabase
       .from("characters")
       .select("*")
       .eq("name", charName)
       .single();
 
-    if (data) {
-      setSelectedCharacter(data);
-      setStep(data.has_pin ? "enter" : "register");
+    if (!data) return;
+
+    if (charName === "???") {
+      setAdminCharacter(data);
       setPin("");
       setShowPad(true);
+    } else {
+      navigate(`/character/${data.id}`);
     }
   };
 
@@ -92,39 +89,20 @@ export default function Login() {
     }
 
     const bcrypt = await import("bcryptjs");
-    if (step === "register") {
+
+    if (!adminCharacter.has_pin) {
       const hash = bcrypt.hashSync(pin, 10);
       await supabase
         .from("characters")
         .update({ pin_hash: hash, has_pin: true })
-        .eq("id", selectedCharacter.id);
-
-      if (selectedCharacter.name === "???") {
+        .eq("id", adminCharacter.id);
+      localStorage.setItem("session", JSON.stringify({ role: "admin" }));
+      navigate("/admin");
+    } else {
+      const valid = bcrypt.compareSync(pin, adminCharacter.pin_hash);
+      if (valid) {
         localStorage.setItem("session", JSON.stringify({ role: "admin" }));
         navigate("/admin");
-      } else {
-        localStorage.setItem(
-          "session",
-          JSON.stringify({ role: "player", characterId: selectedCharacter.id }),
-        );
-        navigate(`/character/${selectedCharacter.id}`);
-      }
-    } else {
-      const valid = bcrypt.compareSync(pin, selectedCharacter.pin_hash);
-      if (valid) {
-        if (selectedCharacter.name === "???") {
-          localStorage.setItem("session", JSON.stringify({ role: "admin" }));
-          navigate("/admin");
-        } else {
-          localStorage.setItem(
-            "session",
-            JSON.stringify({
-              role: "player",
-              characterId: selectedCharacter.id,
-            }),
-          );
-          navigate(`/character/${selectedCharacter.id}`);
-        }
       } else {
         setError("Código errado, não me decepcione.");
       }
@@ -157,17 +135,14 @@ export default function Login() {
         backgroundPosition: "center",
       }}
     >
-      {/* Overlay atrás do conteúdo */}
       <div className="absolute inset-0 bg-[#1a1816]/80 backdrop-blur-none z-0 pointer-events-none" />
 
-      {/* Conteúdo acima da overlay */}
       <div className="relative z-10 max-w-md w-full text-center space-y-6">
         <h1 className="text-4xl text-yellow-300 font-['MedievalSharp']">
           Quem é você?
         </h1>
 
-        {/* Seletor de personagem */}
-        {step === "select" && (
+        {!showPad && (
           <div className="grid grid-cols-2 gap-6">
             {characters.map((char) => (
               <button
@@ -205,11 +180,10 @@ export default function Login() {
           </div>
         )}
 
-        {/* PIN Pad */}
         {showPad && (
           <div className="bg-[#2f2929] rounded-xl shadow-xl border border-yellow-800 p-6">
             <p className="text-yellow-200 text-2xl">
-              {step === "register" ? "Crie seu PIN" : "Digite seu PIN"}
+              {adminCharacter?.has_pin ? "Digite seu PIN" : "Crie seu PIN"}
             </p>
 
             {error && (
@@ -249,10 +223,9 @@ export default function Login() {
 
             <button
               onClick={() => {
-                setStep("select");
-                setSelectedCharacter(null);
-                setPin("");
                 setShowPad(false);
+                setAdminCharacter(null);
+                setPin("");
                 setError("");
               }}
               className="text-yellow-300 underline mt-4"
