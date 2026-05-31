@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import parse from "html-react-parser";
 
 export default function Character() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [character, setCharacter] = useState(null);
   const [gifts, setGifts] = useState([]);
   const [items, setItems] = useState([]);
@@ -143,6 +144,16 @@ export default function Character() {
       <div className="absolute inset-0 bg-[#1a1816]/80 pointer-events-none backdrop-blur-none"></div>
 
       <div className="relative max-w-3xl mx-auto text-center">
+        <button
+          onClick={() => navigate("/")}
+          className="absolute left-0 top-0 text-yellow-400 hover:text-yellow-200 transition-colors p-1"
+          aria-label="Voltar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
         <div className="flex flex-col items-center">
           <img
             src={character.image_url || "/avatars/unknown.png"}
