@@ -1,6 +1,14 @@
 import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+// Clear stale localStorage entries from the old Supabase project
+const OLD_PROJECT_REF = 'lyuoqsiipcstauszdazg';
+Object.keys(localStorage).forEach((key) => {
+  if (key.includes(OLD_PROJECT_REF)) {
+    localStorage.removeItem(key);
+  }
+});
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
