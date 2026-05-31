@@ -1,38 +1,38 @@
 // src/pages/Login.jsx
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 
 const characters = [
   {
-    name: 'Thebryan',
+    name: "Thebryan",
     image:
-      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/thebryan.png?width=300&quality=70',
+      "https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/characters/thebryan.png?width=300&quality=70",
   },
   {
-    name: 'Tythos',
+    name: "Tythos",
     image:
-      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/thytus.png?width=300&quality=70',
+      "https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/characters/thytus.png?width=300&quality=70",
   },
   {
-    name: 'Toji',
+    name: "Toji",
     image:
-      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/toji.png?width=300&quality=70',
+      "https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/characters/toji.png?width=300&quality=70",
   },
   {
-    name: 'Talik',
+    name: "Talik",
     image:
-      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/talik.png?width=300&quality=70',
+      "https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/characters/talik.png?width=300&quality=70",
   },
   {
-    name: 'Danstão',
+    name: "Danstão",
     image:
-      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/danstao.png?width=300&quality=70',
+      "https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/characters/danstao.png?width=300&quality=70",
   },
   {
-    name: '???',
+    name: "???",
     image:
-      'https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/characters/unknown.png?width=300&quality=70',
+      "https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/characters/unknown.png?width=300&quality=70",
   },
 ];
 
@@ -40,11 +40,11 @@ const totalImages = characters.length;
 
 export default function Login() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
-  const [pin, setPin] = useState('');
-  const [step, setStep] = useState('select');
+  const [pin, setPin] = useState("");
+  const [step, setStep] = useState("select");
   const [showPad, setShowPad] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,64 +69,64 @@ export default function Login() {
   }, []);
 
   const handleSelectCharacter = async (charName) => {
-    setError('');
+    setError("");
     const { data } = await supabase
-      .from('characters')
-      .select('*')
-      .eq('name', charName)
+      .from("characters")
+      .select("*")
+      .eq("name", charName)
       .single();
 
     if (data) {
       setSelectedCharacter(data);
-      setStep(data.has_pin ? 'enter' : 'register');
-      setPin('');
+      setStep(data.has_pin ? "enter" : "register");
+      setPin("");
       setShowPad(true);
     }
   };
 
   const handleSubmitPin = async () => {
-    setError('');
+    setError("");
     if (pin.length !== 6) {
-      setError('O PIN deve ter 6 dígitos.');
+      setError("O PIN deve ter 6 dígitos.");
       return;
     }
 
-    const bcrypt = await import('bcryptjs');
-    if (step === 'register') {
+    const bcrypt = await import("bcryptjs");
+    if (step === "register") {
       const hash = bcrypt.hashSync(pin, 10);
       await supabase
-        .from('characters')
+        .from("characters")
         .update({ pin_hash: hash, has_pin: true })
-        .eq('id', selectedCharacter.id);
+        .eq("id", selectedCharacter.id);
 
-      if (selectedCharacter.name === '???') {
-        localStorage.setItem('session', JSON.stringify({ role: 'admin' }));
-        navigate('/admin');
+      if (selectedCharacter.name === "???") {
+        localStorage.setItem("session", JSON.stringify({ role: "admin" }));
+        navigate("/admin");
       } else {
         localStorage.setItem(
-          'session',
-          JSON.stringify({ role: 'player', characterId: selectedCharacter.id }),
+          "session",
+          JSON.stringify({ role: "player", characterId: selectedCharacter.id }),
         );
         navigate(`/character/${selectedCharacter.id}`);
       }
     } else {
       const valid = bcrypt.compareSync(pin, selectedCharacter.pin_hash);
       if (valid) {
-        if (selectedCharacter.name === '???') {
-          localStorage.setItem('session', JSON.stringify({ role: 'admin' }));
-          navigate('/admin');
+        if (selectedCharacter.name === "???") {
+          localStorage.setItem("session", JSON.stringify({ role: "admin" }));
+          navigate("/admin");
         } else {
           localStorage.setItem(
-            'session',
+            "session",
             JSON.stringify({
-              role: 'player',
+              role: "player",
               characterId: selectedCharacter.id,
             }),
           );
           navigate(`/character/${selectedCharacter.id}`);
         }
       } else {
-        setError('Código errado, não me decepcione.');
+        setError("Código errado, não me decepcione.");
       }
     }
   };
@@ -152,9 +152,9 @@ export default function Login() {
       className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#1a1816] to-[#13110f] text-white font-['MedievalSharp'] text-base p-6"
       style={{
         backgroundImage:
-          "url('https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/ui/bg.webp')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+          "url('https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/ui/bg.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       {/* Overlay atrás do conteúdo */}
@@ -167,7 +167,7 @@ export default function Login() {
         </h1>
 
         {/* Seletor de personagem */}
-        {step === 'select' && (
+        {step === "select" && (
           <div className="grid grid-cols-2 gap-6">
             {characters.map((char) => (
               <button
@@ -182,7 +182,7 @@ export default function Login() {
                   className="absolute inset-0 w-full h-full object-cover opacity-20 scale-150 z-0"
                 />
                 <div className="relative z-10">
-                  {char.name === '???' ? (
+                  {char.name === "???" ? (
                     <div className="relative w-24 h-24 mx-auto mb-2">
                       <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-pulse blur-md opacity-40 z-20 shadow-yellow-400/50 shadow-lg" />
                       <img
@@ -209,7 +209,7 @@ export default function Login() {
         {showPad && (
           <div className="bg-[#2f2929] rounded-xl shadow-xl border border-yellow-800 p-6">
             <p className="text-yellow-200 text-2xl">
-              {step === 'register' ? 'Crie seu PIN' : 'Digite seu PIN'}
+              {step === "register" ? "Crie seu PIN" : "Digite seu PIN"}
             </p>
 
             {error && (
@@ -224,20 +224,20 @@ export default function Login() {
                   key={i}
                   className={`w-8 h-8 sm:w-10 sm:h-10 border-2 rounded-md transition duration-300 ease-in-out transform ${
                     pin[i]
-                      ? 'bg-yellow-400 border-yellow-600 scale-105'
-                      : 'border-yellow-500 bg-[#2f2929]'
+                      ? "bg-yellow-400 border-yellow-600 scale-105"
+                      : "border-yellow-500 bg-[#2f2929]"
                   } shadow-md`}
                 />
               ))}
             </div>
 
             <div className="grid grid-cols-3 gap-3 w-4/5 mx-auto mt-6">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, '←', 0, '✓'].map((val) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, "←", 0, "✓"].map((val) => (
                 <button
                   key={val}
                   onClick={() => {
-                    if (val === '←') return removeDigit();
-                    if (val === '✓') return handleSubmitPin();
+                    if (val === "←") return removeDigit();
+                    if (val === "✓") return handleSubmitPin();
                     addDigit(val.toString());
                   }}
                   className="bg-yellow-700 border border-yellow-800 text-black font-bold py-3 rounded-md active:scale-95 active:bg-yellow-800 transition-transform shadow-md hover:bg-yellow-600"
@@ -249,11 +249,11 @@ export default function Login() {
 
             <button
               onClick={() => {
-                setStep('select');
+                setStep("select");
                 setSelectedCharacter(null);
-                setPin('');
+                setPin("");
                 setShowPad(false);
-                setError('');
+                setError("");
               }}
               className="text-yellow-300 underline mt-4"
             >

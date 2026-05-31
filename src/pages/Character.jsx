@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import parse from 'html-react-parser';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import parse from "html-react-parser";
 
 export default function Character() {
   const { id } = useParams();
@@ -17,9 +17,9 @@ export default function Character() {
   const [newItem, setNewItem] = useState(null);
 
   useEffect(() => {
-    const session = JSON.parse(localStorage.getItem('session'));
-    if (!session || session.role !== 'player' || session.characterId !== id) {
-      navigate('/');
+    const session = JSON.parse(localStorage.getItem("session"));
+    if (!session || session.role !== "player" || session.characterId !== id) {
+      navigate("/");
     } else {
       setAuthorized(true);
     }
@@ -30,22 +30,22 @@ export default function Character() {
 
     const fetchData = async () => {
       const { data: charData } = await supabase
-        .from('characters')
-        .select('*')
-        .eq('id', id)
+        .from("characters")
+        .select("*")
+        .eq("id", id)
         .single();
 
       const { data: giftData } = await supabase
-        .from('character_gifts')
+        .from("character_gifts")
         .select(
-          'id, gifts(id, name, description, uses_per_short_rest, uses_per_long_rest)',
+          "id, gifts(id, name, description, uses_per_short_rest, uses_per_long_rest)",
         )
-        .eq('character_id', id);
+        .eq("character_id", id);
 
       const { data: itemData } = await supabase
-        .from('character_items')
-        .select('id, items(id, name, description, image_url)')
-        .eq('character_id', id);
+        .from("character_items")
+        .select("id, items(id, name, description, image_url)")
+        .eq("character_id", id);
 
       if (charData) setCharacter(charData);
       if (giftData) setGifts(giftData);
@@ -58,21 +58,21 @@ export default function Character() {
 
     // Subscription to gifts channel for real-time updates
     const giftSubscription = supabase
-      .channel('character_gifts')
+      .channel("character_gifts")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'character_gifts',
+          event: "INSERT",
+          schema: "public",
+          table: "character_gifts",
           filter: `character_id=eq.${id}`,
         },
         (payload) => {
           const newGiftId = payload.new.gift_id;
           supabase
-            .from('gifts')
-            .select('*')
-            .eq('id', newGiftId)
+            .from("gifts")
+            .select("*")
+            .eq("id", newGiftId)
             .single()
             .then(({ data }) => {
               if (data) {
@@ -89,21 +89,21 @@ export default function Character() {
 
     // Subscription to items channel for real-time updates
     const itemSubscription = supabase
-      .channel('character_items')
+      .channel("character_items")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'character_items',
+          event: "INSERT",
+          schema: "public",
+          table: "character_items",
           filter: `character_id=eq.${id}`,
         },
         (payload) => {
           const newItemId = payload.new.item_id;
           supabase
-            .from('items')
-            .select('*')
-            .eq('id', newItemId)
+            .from("items")
+            .select("*")
+            .eq("id", newItemId)
             .single()
             .then(({ data }) => {
               if (data) {
@@ -148,9 +148,9 @@ export default function Character() {
       className="min-h-screen px-4 py-6 bg-[#1a1816] text-white font-['MedievalSharp'] relative"
       style={{
         backgroundImage:
-          "url('https://lyuoqsiipcstauszdazg.supabase.co/storage/v1/object/public/ui/bg.webp')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+          "url('https://dxtglgwqrqwgfhlgzqqw.supabase.co/storage/v1/object/public/ui/bg.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="absolute inset-0 bg-[#1a1816]/80 pointer-events-none backdrop-blur-none"></div>
@@ -158,7 +158,7 @@ export default function Character() {
       <div className="relative max-w-3xl mx-auto text-center">
         <div className="flex flex-col items-center">
           <img
-            src={character.image_url || '/avatars/unknown.png'}
+            src={character.image_url || "/avatars/unknown.png"}
             alt={character.name}
             className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-yellow-600 object-cover shadow-lg"
           />
